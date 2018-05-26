@@ -6,8 +6,8 @@ A Bitcoin full node for building applications and services with Node.js. A node 
 ## Install
 
 ```bash
-npm install -g bitcore-node
-bitcore-node start
+npm install ProphetAlgorithms/bitcore-node-zero
+./node_modules/bitcore-node-zero/bin/bitcore-node start
 ```
 
 Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and x86_64 Mac OS X. Upon npm install, the binaries for your platform will be downloaded. For more detailed installation instructions, or if you want to compile the project yourself, then please see the Bitcore branch of [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12.1-bitcore).
@@ -25,10 +25,10 @@ Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and
 Bitcore includes a Command Line Interface (CLI) for managing, configuring and interfacing with your Bitcore Node.
 
 ```bash
-bitcore-node create -d <bitcoin-data-dir> mynode
+./node_modules/bitcore-node-zero/bin/bitcore-node create -d <bitcoin-data-dir> mynode
 cd mynode
-bitcore-node install <service>
-bitcore-node install https://github.com/yourname/helloworld
+./node_modules/bitcore-node-zero/bin/bitcore-node install <service>
+./node_modules/bitcore-node-zero/bin/bitcore-node install https://github.com/yourname/helloworld
 ```
 
 This will create a directory with configuration files for your node and install the necessary dependencies. For more information about (and developing) services, please see the [Service Documentation](docs/services.md).
@@ -37,8 +37,8 @@ This will create a directory with configuration files for your node and install 
 
 There are several add-on services available to extend the functionality of Bitcore:
 
-- [Insight API](https://github.com/bitpay/insight-api)
-- [Insight UI](https://github.com/bitpay/insight-ui)
+- [Insight API Zero](https://github.com/ProphetAlgorithms/insight-api-zero)
+- [Insight UI Zero](https://github.com/ProphetAlgorithms/insight-ui-zero)
 - [Bitcore Wallet Service](https://github.com/bitpay/bitcore-wallet-service)
 
 ## Documentation
