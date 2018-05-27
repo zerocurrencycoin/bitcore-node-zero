@@ -7,7 +7,7 @@ var index = require('..');
 var log = index.log;
 
 var chai = require('chai');
-var bitcore = require('bitcore-lib-zcash');
+var bitcore = require('bitcore-lib-zero');
 var BN = bitcore.crypto.BN;
 var async = require('async');
 var rimraf = require('rimraf');
@@ -60,7 +60,7 @@ describe('Zcashd Functionality', function() {
         log.error('error="%s"', err.message);
       });
 
-      log.info('Waiting for Zcash to initialize...');
+      log.info('Waiting for Zero to initialize...');
 
       bitcoind.start(function() {
         log.info('Zcashd started');
