@@ -12,6 +12,25 @@ npm install ProphetAlgorithms/bitcore-node-zero
 
 Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and x86_64 Mac OS X. Upon npm install, the binaries for your platform will be downloaded. For more detailed installation instructions, or if you want to compile the project yourself, then please see the Bitcore branch of [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12.1-bitcore).
 
+## Install bitcore-node-zero with insight-api-zero and insight-ui-zero
+
+```bash
+npm install ProphetAlgorithms/bitcore-node-zero
+./node_modules/bitcore-node-zero/bin/bitcore-node create mynode
+cd mynode
+./node_modules/bitcore-node-zero/bin/bitcore-node install ProphetAlgorithms/insight-api-zero ProphetAlgorithms/insight-ui-zero
+```
+Now change the values of rpcuser and rpcpassword with values of your choice in the file bitcoind.js, located from the base path in: ./mynode/node_modules/bitcore-node-zero/lib/services/
+Copy the executables of the Zero daemon to the folder located from the base path in: ./node_modules/bitcore-node-zero/bin/
+If you have changed directories, go back to: ./mynode/ and run the command:
+
+```bash
+./node_modules/bitcore-node-zero/bin/bitcore-node start
+```
+
+Now all the necessary services should be working, wait for the synchronization of all the blocks by the Zero daemon. You can type in the browser's address bar: http://localhost:3001/insight/ , if everything went well you should see the Zero Insight home page.
+
+
 ## Prerequisites
 
 - GNU/Linux x86_32/x86_64, or OSX 64bit *(for bitcoind distributed binaries)*
@@ -39,7 +58,7 @@ There are several add-on services available to extend the functionality of Bitco
 
 - [Insight API Zero](https://github.com/ProphetAlgorithms/insight-api-zero)
 - [Insight UI Zero](https://github.com/ProphetAlgorithms/insight-ui-zero)
-- [Bitcore Wallet Service](https://github.com/bitpay/bitcore-wallet-service)
+<!-- - [Bitcore Wallet Service](https://github.com/bitpay/bitcore-wallet-service) -->
 
 ## Documentation
 
