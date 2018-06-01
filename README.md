@@ -12,7 +12,7 @@ npm install ProphetAlgorithms/bitcore-node-zero
 
 Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and x86_64 Mac OS X. Upon npm install, the binaries for your platform will be downloaded. For more detailed installation instructions, or if you want to compile the project yourself, then please see the Bitcore branch of [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12.1-bitcore).
 
-## Install bitcore-node-zero with insight-api-zero and insight-ui-zero
+## Install bitcore-node-zero with insight-api-zero and insight-ui-zero (tested with nodejs v4)
 
 ```bash
 npm install ProphetAlgorithms/bitcore-node-zero
@@ -20,8 +20,8 @@ npm install ProphetAlgorithms/bitcore-node-zero
 cd mynode
 ./node_modules/bitcore-node-zero/bin/bitcore-node install ProphetAlgorithms/insight-api-zero ProphetAlgorithms/insight-ui-zero
 ```
-Now change the values of rpcuser and rpcpassword with values of your choice in the file bitcoind.js, located from the base path in: ./mynode/node_modules/bitcore-node-zero/lib/services/
-Copy the executables of the Zero daemon to the folder located from the base path in: ./node_modules/bitcore-node-zero/bin/
+Now change the values of rpcuser and rpcpassword with values of your choice in the file bitcoind.js, located from the base path in: ./mynode/node_modules/bitcore-node-zero/lib/services/ .
+Copy the executables of the Zero daemon to the folder located from the base path in: ./node_modules/bitcore-node-zero/bin/ .
 If you have changed directories, go back to: ./mynode/ and run the command:
 
 ```bash
