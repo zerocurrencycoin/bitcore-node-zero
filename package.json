@@ -46,8 +46,8 @@
   ],
   "dependencies": {
     "async": "^1.3.0",
-    "bitcoind-rpc": "zerocurrencycoin/bitcoind-rpc#stats",
-    "bitcore-lib-zero": "zerocurrencycoin/bitcore-lib-zero#saplingroot",
+    "bitcoind-rpc": "zerocurrencycoin/bitcoind-rpc",
+    "bitcore-lib-zero": "zerocurrencycoin/bitcore-lib-zero",
     "body-parser": "^1.13.3",
     "colors": "^1.1.2",
     "commander": "^2.8.1",
