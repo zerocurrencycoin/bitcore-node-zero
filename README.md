@@ -1,7 +1,22 @@
-Bitcore Node
-============
+Bitcore Node (Zero)
+===================
 
-A Bitcoin full node for building applications and services with Node.js. A node is extensible and can be configured to run additional services. At the minimum a node has an interface to [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12.1-bitcore) for more advanced address queries. Additional services can be enabled to make a node more useful such as exposing new APIs, running a block explorer and wallet service.
+A full node for building applications and services on the Zero (ZER) chain with
+Node.js. `bitcore-node-zero` is the orchestrator: it runs as the process named
+`bitcore`, loads the Insight API and UI services, and talks to a `zerod` full node
+over RPC and ZMQ. `zerod` is the authoritative data layer; the address/spent/
+timestamp index RPCs that Insight needs are enabled with flags in `zero.conf`
+(see Prerequisites and Configuration below) — no patched daemon fork is required.
+
+> Source-of-record copy. This README is the corrected version staged under
+> `error/bitcore-node-zero/` in the Insight docs repo. It replaces stale upstream
+> claims (Node v4, ~200 GB / ~8 GB, bitpay binary distribution, a patched
+> daemon) with the actuals for the deployed Zero stack.
+
+Lineage: this is the Zero rename-fork of the Zcash Insight stack
+([str4d/insight-api-zcash](https://github.com/str4d/insight-api-zcash),
+[str4d/insight-ui-zcash](https://github.com/str4d/insight-ui-zcash)), itself
+derived from BitPay's [bitcore-node](https://github.com/bitpay/bitcore-node).
 
 ## Install
 
@@ -10,9 +25,14 @@ npm install zerocurrencycoin/bitcore-node-zero
 ./node_modules/bitcore-node-zero/bin/bitcore-node start
 ```
 
-Note: For your convenience, we distribute bitcoind binaries for x86_64 Linux and x86_64 Mac OS X. Upon npm install, the binaries for your platform will be downloaded. For more detailed installation instructions, or if you want to compile the project yourself, then please see the Bitcore branch of [Bitcoin Core with additional indexing](https://github.com/bitpay/bitcoin/tree/0.12.1-bitcore).
+This installs `bitcore-node-zero` only. It does **not** download a daemon — you
+supply a running `zerod` (see Prerequisites). There is no binary distribution; the
+node connects to `zerod` over RPC/ZMQ using the credentials in your config.
 
-## Install bitcore-node-zero with insight-api-zero and insight-ui-zero (tested with nodejs v4)
+## Install bitcore-node-zero with insight-api-zero and insight-ui-zero
+
+Tested on Node.js **v8.17.0** (the last 8.x). Newer Node is not supported by this
+dependency tree.
 
 ```bash
 npm install zerocurrencycoin/bitcore-node-zero
@@ -20,60 +40,79 @@ npm install zerocurrencycoin/bitcore-node-zero
 cd mynode
 ./node_modules/bitcore-node-zero/bin/bitcore-node install zerocurrencycoin/insight-api-zero zerocurrencycoin/insight-ui-zero
 ```
-Now change the values of rpcuser and rpcpassword with values of your choice in the file bitcoind.js, located from the base path in: ./mynode/node_modules/bitcore-node-zero/lib/services/ .
-Copy the executables of the Zero daemon (you need the version of Zero daemon patched with the addition of rpc calls needed to bitcore-node-zero - https://github.com/zerocurrencycoin/zero-1.0.14-1-bitcore) to the folder located from the base path in: ./node_modules/bitcore-node-zero/bin/ .
-If you have changed directories, go back to: ./mynode/ and run the command:
+
+Set `rpcuser` and `rpcpassword` to match your `zero.conf` (and the RPC port/host)
+in the bitcore-node configuration. Then start a standard `zerod` build (release
+candidate **4.0.1** is the current target) with the Insight index flags enabled —
+see Configuration — and start the node:
 
 ```bash
 ./node_modules/bitcore-node-zero/bin/bitcore-node start
 ```
 
-Now all the necessary services should be working, wait for the synchronization of all the blocks by the Zero daemon. You can type in the browser's address bar: http://localhost:3001/insight/ , if everything went well you should see the Zero Insight home page.
-
+Wait for `zerod` to finish syncing. Then open `http://localhost:3001/insight/` —
+the Zero Insight home page should load.
 
 ## Prerequisites
 
-- GNU/Linux x86_32/x86_64, or OSX 64bit *(for bitcoind distributed binaries)*
-- Node.js v0.10, v0.12 or v4
-- ZeroMQ *(libzmq3-dev for Ubuntu/Debian or zeromq on OSX)*
-- ~200GB of disk storage
-- ~8GB of RAM
+- GNU/Linux x86_64. Deployed on **Ubuntu 18.04 LTS**, 2 vCPU, 4 GB RAM,
+  under 100 GB disk.
+- **Node.js v8.17.0** (last 8.x; the dependency tree is frozen circa 2021).
+- ZeroMQ *(`libzmq3-dev` on Ubuntu/Debian)*.
+- A standard **`zerod`** full node (target release candidate **4.0.1**), built
+  normally — no daemon fork. Insight's address queries require the index flags
+  below to be enabled in `zero.conf`.
+
+### zerod / zero.conf Insight flags
+
+The address, spent, and timestamp index RPCs that `bitcore-node-zero` calls are
+not present in a stock node. On `zerod`, enable them with:
+
+```
+insightexplorer=1      # master switch — compiles in the Insight RPCs
+txindex=1
+addressindex=1
+spentindex=1
+timestampindex=1
+```
+
+These back the RPCs `getrawtransaction`, `getaddresstxids`, `getaddressbalance`,
+`getaddressutxos`, `getaddressmempool`, `getspentinfo`, and `getblockhashes`. If
+any returns `Method not found`, the corresponding Insight endpoint will fail.
 
 ## Configuration
 
-Bitcore includes a Command Line Interface (CLI) for managing, configuring and interfacing with your Bitcore Node.
+Bitcore includes a Command Line Interface (CLI) for managing, configuring and
+interfacing with your node.
 
 ```bash
-./node_modules/bitcore-node-zero/bin/bitcore-node create -d <bitcoin-data-dir> mynode
+./node_modules/bitcore-node-zero/bin/bitcore-node create -d <zero-data-dir> mynode
 cd mynode
 ./node_modules/bitcore-node-zero/bin/bitcore-node install <service>
-./node_modules/bitcore-node-zero/bin/bitcore-node install https://github.com/yourname/helloworld
 ```
 
-This will create a directory with configuration files for your node and install the necessary dependencies. For more information about (and developing) services, please see the [Service Documentation](docs/services.md).
+This creates a directory with configuration files for your node and installs the
+necessary dependencies. For more about services, see the
+[Service Documentation](docs/services.md).
 
 ## Add-on Services
 
-There are several add-on services available to extend the functionality of Bitcore:
-
 - [Insight API Zero](https://github.com/zerocurrencycoin/insight-api-zero)
 - [Insight UI Zero](https://github.com/zerocurrencycoin/insight-ui-zero)
-<!-- - [Bitcore Wallet Service](https://github.com/bitpay/bitcore-wallet-service) -->
 
 ## Documentation
 
-- [Upgrade Notes](docs/upgrade.md)
 - [Services](docs/services.md)
-  - [Bitcoind](docs/services/bitcoind.md) - Interface to Bitcoin Core
-  - [Web](docs/services/web.md) - Creates an express application over which services can expose their web/API content
-- [Development Environment](docs/development.md) - Guide for setting up a development environment
+  - [Bitcoind](docs/services/bitcoind.md) - The RPC/ZMQ interface to `zerod`
+  - [Web](docs/services/web.md) - Express application over which services expose their web/API content
+- [Development Environment](docs/development.md)
 - [Node](docs/node.md) - Details on the node constructor
 - [Bus](docs/bus.md) - Overview of the event bus constructor
-- [Release Process](docs/release.md) - Information about verifying a release and the release process.
 
 ## Contributing
 
-Please send pull requests for bug fixes, code optimization, and ideas for improvement. For more information on how to contribute, please refer to our [CONTRIBUTING](https://github.com/bitpay/bitcore/blob/master/CONTRIBUTING.md) file.
+Please send pull requests for bug fixes, code optimization, and ideas for
+improvement.
 
 ## License
 
